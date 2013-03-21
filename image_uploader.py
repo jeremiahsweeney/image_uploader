@@ -13,34 +13,26 @@ def getPath():
     return path
 
 def getImage(path):
-    image = open(path, 'rb')
+    f = open(path, 'rb')
+    image = base64.b64encode(f.read())
     return image
 
-def encodeImage(image):
-    encoded_image = base64.b64encode(image.read())
-    return encoded_image
-
-def postImage(encoded_image):
-    payload = {'image': encoded_image}
+def postImage(image):
+    payload = {'image': image}
     headers = {'Authorization': 'Client-ID {0}'.format(client_id)}
-    print(headers)
     request = requests.post(upload_url, data=payload, headers=headers)
     data = json.loads(request.text)
     return data
 
 def getURL(data):
     if data['success'] == True:
-        return data['data']['link']
+        url = data['data']['link']
+        print('Your image is located at:\n%s' % (url))
     else:
-        return 'Upload failed.'
-
-def printURL(url):
-    print('Your image is located at: %s' % (url))
+        print('Upload failed.')
 
 
 path = getPath()
 image = getImage(path)
-encoded_image = encodeImage(image)
-data = postImage(encoded_image)
-url = getURL(data)
-printURL(url)
+data = postImage(image)
+getURL(data)
