@@ -31,8 +31,11 @@ def getURL(data):
     else:
         print('Upload failed.')
 
+def main():
+    path = getPath()
+    image = getImage(path)
+    data = postImage(image)
+    getURL(data)
 
-path = getPath()
-image = getImage(path)
-data = postImage(image)
-getURL(data)
+
+main()
